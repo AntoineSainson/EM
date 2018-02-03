@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# SIGMAS
+# SIGMAS (Matrice de covariance)
 
 sig1 = np.array([[2, 1], [1, 3]])
 sig2 = np.array([[6, 1], [1, 7]])
@@ -11,12 +11,23 @@ sig2 = np.array([[6, 1], [1, 7]])
 w1 = 0.3
 w2 = 0.7
 
-#mu
+#mu   (moyenne)
 
 mu1 = np.array([1, 1])
 mu2 = np.array([5, 5])
 
 nb_points = 50
+
+"""
+Distribution normale multidimensionnelle
+"""
+def normal_multi(d, mu, sig, x):
+    dens = 1 / (np.power(2 * np.pi, d / 2) * np.sqrt(np.linalg.det(sig)))
+
+    expos = -1 / 2 * np.transpose(x - mu) * np.linalg.inv(sig) * (x - mu)
+    dens = dens * (np.power(np.exp, expos))
+
+    return dens
 
 def genGauss(N, mu, sig):
     data = np.random.randn(2, N)
