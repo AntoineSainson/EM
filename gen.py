@@ -3,27 +3,13 @@ import matplotlib.pyplot as plt
 
 # SIGMAS (Matrice de covariance)
 
-sig1 = np.array([[2, 1], [1, 3]])
-sig2 = np.array([[6, 1], [1, 7]])
-
-#w
-
-w1 = 0.3
-w2 = 0.7
-
-#mu   (moyenne)
-
-mu1 = np.array([1, 1])
-mu2 = np.array([5, 5])
-
-nb_points = 50
+nb_points = 5000
 
 """
 Distribution normale multidimensionnelle
 """
 def normal_multi(d, mu, sig, x):
     dens = 1 / (np.power(2 * np.pi, d / 2) * np.sqrt(np.linalg.det(sig)))
-
     expos = -1 / 2 * np.transpose(x - mu) * np.linalg.inv(sig) * (x - mu)
     dens = dens * (np.power(np.exp, expos))
 
@@ -33,17 +19,15 @@ def genGauss(N, mu, sig):
     data = np.random.randn(2, N)
     A = np.linalg.cholesky(sig)
     data = A @ data
-    k = 0
-    for i in data:
-        for j in i:
-            j += mu[k]
-        k += 1
+    for i in range(len(data[0])):
+        data[0][i]+= mu[0]
+        data[1][i] += mu[1]
     return data
 
 def plotGauss(data, par):
     plt.plot(data[0], data[1], par)
 
-
+"""
 def genGMM(N, mu1, mu2, sig1, sig2, w1, w2):
     f_data = genGauss(nb_points, mu1, sig1)
     s_data = genGauss(nb_points,mu2, sig2 )
@@ -56,10 +40,4 @@ def genGMM(N, mu1, mu2, sig1, sig2, w1, w2):
             data[0][i] = s_data[0][i]
             data[1][i] = s_data[1][i]
     return data
-
-data = genGMM(nb_points, mu1, mu2, sig1, sig2, w1, w2) #Will plot the 2 gaussians
-plt.axis([-10, 10, -10, 10])
-plt.show()
-plotGauss(data, 'go')                                                           #Plot the resulting GMM
-plt.axis([-10, 10, -10, 10])
-plt.show()
+"""

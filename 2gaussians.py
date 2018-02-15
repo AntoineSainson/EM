@@ -18,7 +18,7 @@ w2 = 0.3
 mu1 = np.array([5,9])
 mu2 = np.array([-5,-5])
 
-nb_points = 1000
+nb_points = 10
 
 def genGauss(N, mu, sig):
     data = np.random.randn(2, N)
@@ -46,10 +46,11 @@ def genGMM(N, mu1, mu2, sig1, sig2, w1, w2):
             data[1][i] = s_data[1][i]
     return data
 
-def LMGD(point, mu, sig):
-    q =  -ln (2 *m.pi) -.5 ln(np.linalg.det(sig))))
+def MGD(point, mu, sig):
+
+    q =  (1 /  (2 *m.pi)  * np.sqrt(np.linalg.det(sig)))
     try:
-        e = ((-1/2)  * (point - mu).T @ np.invert(sig)  @ (point - mu))
+        e = np.exp((-1/2) * np.transpose(point - mu) @ np.invert(sig) @ (point - mu))
     except OverflowError:
         e = sys.float_info.max
     res = q + e
@@ -59,8 +60,8 @@ def eStep(m1, m2, s1, s2, al1, al2):
     probs = np.zeros((2, nb_points))
     for i in range(len(data[0])):
         point = np.array([data[0][i], data[1][i]])
-        probs[0][i] = LMGD(point, m1, sig1)
-        probs[1][i] = LMGD(point, m2, sig2)
+        probs[0][i] = MGD(point, m1, sig1)
+        probs[1][i] = MGD(point, m2, sig2)
     weights = np.zeros((2, nb_points))
     for i in range(len(data[0])):
         tot =  (probs[0][i] * al1 + probs[1][i] * al2)
